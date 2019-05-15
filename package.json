@@ -1,0 +1,97 @@
+{
+    "name": "plop-templates",
+    "displayName": "Plop File Templates",
+    "description": "Create new project files from plop templates",
+    "version": "1.0.0",
+    "publisher": "samkirkland",
+    "engines": {
+        "vscode": "^1.31.1"
+    },
+    "categories": [
+        "Other"
+    ],
+    "author": {
+        "name": "Sam Kirkland",
+        "url": "https://github.com/samkirkland"
+    },
+    "repository": {
+        "url": "https://github.com/samkirkland/plop-templates"
+    },
+    "bugs": {
+        "url": "https://github.com/samkirkland/plop-templates/issues",
+        "email": "plop-templates@samkirkland.com"
+    },
+    "galleryBanner": {
+        "color": "#333333",
+        "theme": "dark"
+    },
+    "qna": "https://github.com/samkirkland/plop-templates#resolving-common-issues",
+    "license": "MIT",
+    "keywords": [
+        "templates",
+        "plop-js",
+        "create-item-by-template",
+        "create-folder",
+        "create-file"
+    ],
+    "activationEvents": [
+        "workspaceContains:**/plopfile.js",
+        "onCommand:plopfiletemplates.newFile"
+    ],
+    "icon": "resources/logo.png",
+    "main": "./out/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "plopfiletemplates.newFile",
+                "title": "New File from Plop Template",
+                "category": "Plop File Templates"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "plopfiletemplates.newFile",
+                    "group": "navigation@500"
+                }
+            ]
+        },
+        "configuration": [
+            {
+                "title": "Plop Templates",
+                "properties": {
+                    "plopTemplates.configFileName": {
+                        "type": "string",
+                        "default": "plopfile.js",
+                        "description": "List of paths to plop file templates"
+                    },
+                    "plopTemplates.terminalName": {
+                        "type": "string",
+                        "default": "New File from Plop Template",
+                        "description": "Name of the Terminal window created for plop"
+                    },
+                    "plopTemplates.destinationPath": {
+                        "type": "string",
+                        "default": "destinationpath",
+                        "description": "Name of the prompt the destination path will be passed in as"
+                    }
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.34",
+        "@types/node": "^8.10.25",
+        "@types/mocha": "^2.2.42",
+        "plop": "2.3.0",
+        "node-plop": "0.18.0"
+    }
+}
