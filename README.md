@@ -57,13 +57,21 @@ To change settings open vscodes settings window and navigate to the plop extensi
 | ----- | ----------- | ------------- |
 | configFileName | File name or path to plop file | `plopfile.js` at root of workspace |
 | terminalName | Name of the Terminal window created for plop | `terminalName` |
+| plopCommand | By default this extension assumes plop is installed globally (npm install -g plop). If this is not the case, add a 'scripts' record in your package.json file -- example: 'scripts': { 'add-from-template': 'plop' } -- next update this setting with your command case, in this example 'add-from-template' | `plop` |
 | destinationPath | Name of the prompt the destination path will be passed in as | `destinationpath` |
 
 ## Resolving common issues
 * The term 'plop' is not recognized as the name of a cmdlet, function, script file, or operable program...
   * You need to install plop globally, do so by running the following `npm install -g plop`
+  * You can also use the `plopCommand` setting above if you don't want to install plop globally
 
 ## Release Notes
+
+#### 1.0.2
+- Fixed command naming
+- Added link to vscode marketplace
+- Added issues link
+- Added plopCommand setting
 
 #### 1.0.0
 - Initial release

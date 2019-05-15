@@ -18,7 +18,7 @@ async function selectGenerator(plop: any, plopFile: string) {
     // no generators, output error
     if (generators.length === 0) {
         vscode.window.showErrorMessage(`No Plop.js generators found in the config file "${plopFile}". Add one using plop.setGenerator(...)`);
-        return;
+        throw "No Plop.js generators found...";
     }
 
     // single generator, no need in prompting for selection
@@ -49,6 +49,8 @@ async function runPlopInNewTerminal(dirUri: vscode.Uri) {
     const plopFileName: string = userSettings.get('plopTemplates.configFileName') || 'plopfile.js';
     const plopTerminalName: string = userSettings.get('plopTemplates.terminalName') || 'New File from Plop Template';
     const destinationpathName: string = userSettings.get('plopTemplates.destinationPath') || 'destinationpath';
+    const plopCommand: string = (userSettings.get('plopTemplates.plopCommand') as string || 'plop').toLowerCase().trim();
+    let plopCommandRelative: string = plopCommand;
 
     const plopFile = vscode.workspace.rootPath + "/" + plopFileName;
     let plop: any;
@@ -104,12 +106,16 @@ async function runPlopInNewTerminal(dirUri: vscode.Uri) {
         });
     }
 
+    if (plopCommand !== "plop") {
+        plopCommandRelative = "npm run " + plopCommand;
+    }
+
     plopTerminal.show();
-    plopTerminal.sendText(`plop ${selectedGenerator.label} -- --${destinationpathName} '${destPath}'`);
+    plopTerminal.sendText(`${plopCommandRelative} '${selectedGenerator.name ? selectedGenerator.name : selectedGenerator.label}' -- --${destinationpathName} '${destPath}'`);
 }
 
 export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerCommand('plopfiletemplates.newFile', (dirUri: vscode.Uri) => {
+    let disposable = vscode.commands.registerCommand('ploptemplates.newFile', (dirUri: vscode.Uri) => {
         runPlopInNewTerminal(dirUri);
     });
 
