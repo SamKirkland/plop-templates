@@ -25,7 +25,7 @@
         "color": "#333333",
         "theme": "dark"
     },
-    "qna": "https://github.com/samkirkland/plop-templates#resolving-common-issues",
+    "qna": "https://github.com/samkirkland/plop-templates/issues",
     "license": "MIT",
     "keywords": [
         "templates",

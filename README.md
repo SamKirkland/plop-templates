@@ -1,5 +1,6 @@
 # <img src="https://raw.githubusercontent.com/samkirkland/plop-templates/master/resources/logo.png" width="48">Plop File Templates for Visual Studio Code
 
+Install the extension on the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=SamKirkland.plop-templates)
 
 ## Features
 This extension adds single and multi-file templates to Visual Studio Code.
