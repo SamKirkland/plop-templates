@@ -1,5 +1,8 @@
 # Change Log
 
+#### 1.0.3
+- Added destinationpath command
+
 #### 1.0.2
 - Fixed command naming
 - Added link to vscode marketplace

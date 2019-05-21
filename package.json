@@ -2,7 +2,7 @@
     "name": "plop-templates",
     "displayName": "Plop File Templates",
     "description": "Create new project files from plop templates",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "publisher": "samkirkland",
     "engines": {
         "vscode": "^1.31.1"

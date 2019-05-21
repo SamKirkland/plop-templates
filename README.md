@@ -67,6 +67,9 @@ To change settings open vscodes settings window and navigate to the plop extensi
 
 ## Release Notes
 
+#### 1.0.3
+- Added destinationpath command
+
 #### 1.0.2
 - Fixed command naming
 - Added link to vscode marketplace
