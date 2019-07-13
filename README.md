@@ -57,7 +57,7 @@ To change settings open vscodes settings window and navigate to the plop extensi
 | ----- | ----------- | ------------- |
 | configFileName | File name or path to plop file | `plopfile.js` at root of workspace |
 | terminalName | Name of the Terminal window created for plop | `terminalName` |
-| plopCommand | By default this extension assumes plop is installed globally (npm install -g plop). If this is not the case, add a 'scripts' record in your package.json file -- example: 'scripts': { 'add-from-template': 'plop' } -- next update this setting with your command case, in this example 'add-from-template' | `plop` |
+| plopCommand | By default this extension assumes plop is installed globally (`npm install -g plop`).<br>If you'd like to use a local version of plop you can do so by adding `"add-form-template": "plop"` to your `"scripts"` record in your `package.json`.<br><br>Example:<br>```'scripts': { 'add-from-template': 'plop' }```<br><br>Next update the `plopCommand` setting with your command name (in the example above "add-from-template") | `plop` |
 | destinationPath | Name of the prompt the destination path will be passed in as | `destinationpath` |
 
 ## Resolving common issues
@@ -66,6 +66,9 @@ To change settings open vscodes settings window and navigate to the plop extensi
   * You can also use the `plopCommand` setting above if you don't want to install plop globally
 
 ## Release Notes
+
+#### 1.0.4
+- Skip 'destinationpathName' parameter automatically (thanks [@rbadapanda](https://github.com/rbadapanda))
 
 #### 1.0.3
 - Added destinationpath command

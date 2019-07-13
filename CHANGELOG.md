@@ -1,5 +1,8 @@
 # Change Log
 
+#### 1.0.4
+- Skip 'destinationpathName' parameter automatically (thanks [@rbadapanda](https://github.com/rbadapanda))
+
 #### 1.0.3
 - Added destinationpath command
 

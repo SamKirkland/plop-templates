@@ -1,11 +1,11 @@
 'use strict';
 
-import * as vscode from 'vscode';
-import * as path from 'path';
+import { workspace, window, commands, ExtensionContext, Terminal, Uri } from 'vscode';
+import { dirname } from 'path';
 const nodePlop = require('node-plop');
 
 function isWorkspaceOpen() {
-    if ((vscode.workspace) && (vscode.workspace.workspaceFolders) && (vscode.workspace.workspaceFolders.length > 0)) {
+    if ((workspace) && (workspace.workspaceFolders) && (workspace.workspaceFolders.length > 0)) {
         return true;
     }
 
@@ -17,7 +17,7 @@ async function selectGenerator(plop: any, plopFile: string) {
 
     // no generators, output error
     if (generators.length === 0) {
-        vscode.window.showErrorMessage(`No Plop.js generators found in the config file "${plopFile}". Add one using plop.setGenerator(...)`);
+        window.showErrorMessage(`No Plop.js generators found in the config file "${plopFile}". Add one using plop.setGenerator(...)`);
         throw "No Plop.js generators found...";
     }
 
@@ -28,7 +28,7 @@ async function selectGenerator(plop: any, plopFile: string) {
 
     // prompt user for which generator they want to use
     if (generators.length > 1) {
-        return await vscode.window.showQuickPick(
+        return await window.showQuickPick(
             generators.map((g: any) => ({ label: g.name, description: g.description })),
             {
                 placeHolder: "Please choose a generator"
@@ -37,39 +37,39 @@ async function selectGenerator(plop: any, plopFile: string) {
     }
 }
 
-async function runPlopInNewTerminal(dirUri: vscode.Uri) {
+async function runPlopInNewTerminal(dirUri: Uri) {
     if (!dirUri && isWorkspaceOpen()) {
-        vscode.window.showErrorMessage("Project items cannot be created if workspace is not open.");
+        window.showErrorMessage("Project items cannot be created if workspace is not open.");
         return;
     }
 
 
     // user based settings
-    const userSettings = vscode.workspace.getConfiguration();
+    const userSettings = workspace.getConfiguration();
     const plopFileName: string = userSettings.get('plopTemplates.configFileName') || 'plopfile.js';
     const plopTerminalName: string = userSettings.get('plopTemplates.terminalName') || 'New File from Plop Template';
     const destinationpathName: string = userSettings.get('plopTemplates.destinationPath') || 'destinationpath';
     const plopCommand: string = (userSettings.get('plopTemplates.plopCommand') as string || 'plop').toLowerCase().trim();
     let plopCommandRelative: string = plopCommand;
 
-    const plopFile = vscode.workspace.rootPath + "/" + plopFileName;
+    const plopFile = workspace.rootPath + "/" + plopFileName;
     let plop: any;
 
     try {
         plop = nodePlop(plopFile);
     }
     catch (e) {
-        vscode.window.showErrorMessage(`Couldn't load plop config file at the path: "${plopFile}" - ${e.message}`);
+        window.showErrorMessage(`Couldn't load plop config file at the path: "${plopFile}" - ${e.message}`);
         return;
     }
 
 
     let destPath: string = "";
-    let plopTerminal: vscode.Terminal;
+    let plopTerminal: Terminal;
     let selectedGenerator = await selectGenerator(plop, plopFile);
 
     if (selectedGenerator === undefined) {
-        vscode.window.showInformationMessage("No Plop.js generator selected, cancelling...");
+        window.showInformationMessage("No Plop.js generator selected, cancelling...");
         return;
     }
 
@@ -77,7 +77,7 @@ async function runPlopInNewTerminal(dirUri: vscode.Uri) {
         destPath = dirUri.fsPath;
     }
     else {
-        vscode.window.showInformationMessage(`Couldn't find a target location "dirUri", the value of dirUri: "${dirUri}"`);
+        window.showInformationMessage(`Couldn't find a target location "dirUri", the value of dirUri: "${dirUri}"`);
         return;
     }
 
@@ -85,15 +85,15 @@ async function runPlopInNewTerminal(dirUri: vscode.Uri) {
         const fs = require('fs');
         let fsStat = fs.statSync(destPath);
         if (!fsStat.isDirectory()) {
-            destPath = path.dirname(destPath);
+            destPath = dirname(destPath);
         }
     }
     else {
-        vscode.window.showInformationMessage(`Couldn't find a target location "destPath", the value of destPath: "${destPath}"`);
+        window.showInformationMessage(`Couldn't find a target location "destPath", the value of destPath: "${destPath}"`);
         return;
     }
 
-    const existingTerminals = vscode.window.terminals.filter((value) => value.name === plopTerminalName);
+    const existingTerminals = window.terminals.filter((value) => value.name === plopTerminalName);
 
     if (existingTerminals.length > 0) {
         // use existing terminal
@@ -101,7 +101,7 @@ async function runPlopInNewTerminal(dirUri: vscode.Uri) {
     }
     else {
         // create new terminal
-        plopTerminal = vscode.window.createTerminal({
+        plopTerminal = window.createTerminal({
             name: plopTerminalName
         });
     }
@@ -114,8 +114,8 @@ async function runPlopInNewTerminal(dirUri: vscode.Uri) {
     plopTerminal.sendText(`${plopCommandRelative} '${selectedGenerator.name ? selectedGenerator.name : selectedGenerator.label}' --${destinationpathName} '${destPath}'`);
 }
 
-export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerCommand('ploptemplates.newFile', (dirUri: vscode.Uri) => {
+export function activate(context: ExtensionContext) {
+    let disposable = commands.registerCommand('ploptemplates.newFile', (dirUri: Uri) => {
         runPlopInNewTerminal(dirUri);
     });
 
