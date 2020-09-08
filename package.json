@@ -2,7 +2,7 @@
     "name": "plop-templates",
     "displayName": "Plop File Templates",
     "description": "Create new project files from plop templates",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "publisher": "samkirkland",
     "engines": {
         "vscode": "^1.31.1"
@@ -96,14 +96,14 @@
         "watch": "webpack --mode none --watch"
     },
     "dependencies": {
-        "node-plop": "0.19.0",
-        "plop": "2.4.0"
+        "node-plop": "^0.19.0",
+        "plop": "^2.4.0"
     },
     "devDependencies": {
         "@types/node": "^8.10.50",
         "ts-loader": "6.0.4",
         "typescript": "3.5.3",
-        "vscode": "^1.1.35",
+        "@types/vscode": "^1.48.0",
         "webpack": "4.35.3",
         "webpack-cli": "^3.3.5"
     }
