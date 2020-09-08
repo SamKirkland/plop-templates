@@ -103,7 +103,7 @@
         "@types/node": "^8.10.50",
         "ts-loader": "6.0.4",
         "typescript": "3.5.3",
-        "@types/vscode": "^1.48.0",
+        "@types/vscode": "^1.31.0",
         "webpack": "4.35.3",
         "webpack-cli": "^3.3.5"
     }
