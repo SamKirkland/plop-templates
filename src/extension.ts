@@ -1,8 +1,9 @@
-'use strict';
+"use strict";
 
-import { workspace, window, commands, ExtensionContext, Terminal, Uri } from 'vscode';
-import { dirname } from 'path';
-const nodePlop = require('node-plop');
+import { workspace, window, commands, ExtensionContext, Terminal, Uri, QuickPickItem } from "vscode";
+import { dirname } from "path";
+import * as fs from "fs";
+import nodePlop, { NodePlopAPI } from "node-plop";
 
 function isWorkspaceOpen() {
     if ((workspace) && (workspace.workspaceFolders) && (workspace.workspaceFolders.length > 0)) {
@@ -12,7 +13,12 @@ function isWorkspaceOpen() {
     return false;
 }
 
-async function selectGenerator(plop: any, plopFile: string) {
+type Generator = {
+    name: string;
+    description: string;
+};
+
+async function selectGenerator(plop: NodePlopAPI, plopFile: string): Promise<Generator | undefined> {
     const generators = plop.getGeneratorList();
 
     // no generators, output error
@@ -28,12 +34,21 @@ async function selectGenerator(plop: any, plopFile: string) {
 
     // prompt user for which generator they want to use
     if (generators.length > 1) {
-        return await window.showQuickPick(
-            generators.map((g: any) => ({ label: g.name, description: g.description })),
+        const result = await window.showQuickPick<QuickPickItem>(
+            generators.map((generator: Generator) => ({ label: generator.name, description: generator.description })),
             {
                 placeHolder: "Please choose a generator"
             }
         );
+
+        if (result === undefined) {
+            return undefined;
+        }
+
+        return {
+            name: result.label,
+            description: result.description!
+        };
     }
 }
 
@@ -46,20 +61,20 @@ async function runPlopInNewTerminal(dirUri: Uri) {
 
     // user based settings
     const userSettings = workspace.getConfiguration();
-    const plopFileName: string = userSettings.get('plopTemplates.configFileName') || 'plopfile.js';
-    const plopTerminalName: string = userSettings.get('plopTemplates.terminalName') || 'New File from Plop Template';
-    const destinationpathName: string = userSettings.get('plopTemplates.destinationPath') || 'destinationpath';
-    const plopCommand: string = (userSettings.get('plopTemplates.plopCommand') as string || 'plop').toLowerCase().trim();
+    const plopFileName: string = userSettings.get("plopTemplates.configFileName") || "plopfile.js";
+    const plopTerminalName: string = userSettings.get("plopTemplates.terminalName") || "New File from Template";
+    const destinationpathName: string = userSettings.get("plopTemplates.destinationPath") || "destinationpath";
+    const plopCommand: string = (userSettings.get("plopTemplates.plopCommand") as string || "plop").trim();
     let plopCommandRelative: string = plopCommand;
 
     const plopFile = workspace.rootPath + "/" + plopFileName;
-    let plop: any;
+    let plop: NodePlopAPI;
 
     try {
         plop = nodePlop(plopFile);
     }
     catch (e) {
-        window.showErrorMessage(`Couldn't load plop config file at the path: "${plopFile}" - ${e.message}`);
+        window.showErrorMessage(`Couldn't load plop config file at the path: "${plopFile}" - ${e}`);
         return;
     }
 
@@ -82,7 +97,6 @@ async function runPlopInNewTerminal(dirUri: Uri) {
     }
 
     if (destPath !== "") {
-        const fs = require('fs');
         let fsStat = fs.statSync(destPath);
         if (!fsStat.isDirectory()) {
             destPath = dirname(destPath);
@@ -111,12 +125,17 @@ async function runPlopInNewTerminal(dirUri: Uri) {
     }
 
     plopTerminal.show();
-    plopTerminal.sendText(`${plopCommandRelative} "${selectedGenerator.name ? selectedGenerator.name : selectedGenerator.label}" -- --${destinationpathName} "${destPath}"`);
+    plopTerminal.sendText(`${plopCommandRelative} "${selectedGenerator.name}" --${destinationpathName} "${destPath}"`);
 }
 
 export function activate(context: ExtensionContext) {
-    let disposable = commands.registerCommand('ploptemplates.newFile', (dirUri: Uri) => {
-        runPlopInNewTerminal(dirUri);
+    let disposable = commands.registerCommand("ploptemplates.newFile", (dirUri: Uri) => {
+        try {
+            runPlopInNewTerminal(dirUri);
+        }
+        catch (e) {
+            window.showErrorMessage(e);
+        }
     });
 
     context.subscriptions.push(disposable);

@@ -1,4 +1,10 @@
-**/*.ts
-**/tsconfig.json
 .vscode
-!file.ts
+node_modules
+src/**
+package-lock.json
+tsconfig.json
+webpack.config.js
+
+# Include plop and handlebars modules
+!node_modules/node-plop
+!node_modules/handlebars
