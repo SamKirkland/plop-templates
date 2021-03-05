@@ -125,7 +125,7 @@ async function runPlopInNewTerminal(dirUri: Uri) {
     }
 
     plopTerminal.show();
-    plopTerminal.sendText(`${plopCommandRelative} "${selectedGenerator.name}" --${destinationpathName} "${destPath}"`);
+    plopTerminal.sendText(`${plopCommandRelative} "${selectedGenerator.name}" -- --${destinationpathName} "${destPath}"`);
 }
 
 export function activate(context: ExtensionContext) {
