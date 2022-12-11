@@ -1,104 +1,108 @@
 {
-    "name": "plop-templates",
-    "displayName": "File Templates",
-    "description": "Create new files and folders from templates",
-    "version": "1.1.0",
-    "publisher": "samkirkland",
-    "engines": {
-        "vscode": "^1.32.0"
-    },
-    "categories": [
-        "Other"
+  "name": "plop-templates",
+  "displayName": "File Templates",
+  "description": "Create new files and folders from templates",
+  "version": "1.2.0",
+  "publisher": "samkirkland",
+  "engines": {
+    "vscode": "^1.64.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "author": {
+    "name": "Sam Kirkland",
+    "url": "https://github.com/samkirkland"
+  },
+  "repository": {
+    "url": "https://github.com/samkirkland/plop-templates"
+  },
+  "bugs": {
+    "url": "https://github.com/samkirkland/plop-templates/issues",
+    "email": "plop-templates@samkirkland.com"
+  },
+  "galleryBanner": {
+    "color": "#333333",
+    "theme": "dark"
+  },
+  "qna": "https://github.com/samkirkland/plop-templates/issues",
+  "license": "MIT",
+  "keywords": [
+    "templates",
+    "create-item-by-template",
+    "create-folder",
+    "create-file",
+    "plop"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/plopfile.js",
+    "onCommand:ploptemplates.newFile"
+  ],
+  "icon": "resources/logo.png",
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ploptemplates.newFile",
+        "title": "📄 New File from Template",
+        "category": "Plop File Templates"
+      }
     ],
-    "author": {
-        "name": "Sam Kirkland",
-        "url": "https://github.com/samkirkland"
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "ploptemplates.newFile",
+          "group": "navigation@500"
+        }
+      ]
     },
-    "repository": {
-        "url": "https://github.com/samkirkland/plop-templates"
-    },
-    "bugs": {
-        "url": "https://github.com/samkirkland/plop-templates/issues",
-        "email": "plop-templates@samkirkland.com"
-    },
-    "galleryBanner": {
-        "color": "#333333",
-        "theme": "dark"
-    },
-    "qna": "https://github.com/samkirkland/plop-templates/issues",
-    "license": "MIT",
-    "keywords": [
-        "templates",
-        "create-item-by-template",
-        "create-folder",
-        "create-file",
-        "plop"
-    ],
-    "activationEvents": [
-        "workspaceContains:**/plopfile.js",
-        "onCommand:ploptemplates.newFile"
-    ],
-    "icon": "resources/logo.png",
-    "main": "./dist/extension.js",
-    "contributes": {
-        "commands": [{
-            "command": "ploptemplates.newFile",
-            "title": "New File from Template",
-            "category": "Plop File Templates"
-        }],
-        "menus": {
-            "explorer/context": [{
-                "command": "ploptemplates.newFile",
-                "group": "navigation@500"
-            }]
-        },
-        "configuration": [{
-            "title": "Plop Templates",
-            "required": [
-                "plopTemplates.configFileName",
-                "plopTemplates.terminalName",
-                "plopTemplates.destinationPath",
-                "plopTemplates.plopCommand"
-            ],
-            "properties": {
-                "plopTemplates.configFileName": {
-                    "type": "string",
-                    "default": "plopfile.js",
-                    "description": "List of paths to plop file templates"
-                },
-                "plopTemplates.terminalName": {
-                    "type": "string",
-                    "default": "New File from Template",
-                    "description": "Name of the Terminal window created for plop"
-                },
-                "plopTemplates.destinationPath": {
-                    "type": "string",
-                    "default": "destinationpath",
-                    "description": "Name of the prompt the destination path will be passed in as"
-                },
-                "plopTemplates.plopCommand": {
-                    "type": "string",
-                    "default": "plop",
-                    "description": "By default this extension assumes plop is installed globally (npm install -g plop). If this is not the case, add a 'scripts' record in your package.json file -- example: 'scripts': { 'add-from-template': 'plop' } -- next update this setting with your command case, in this example 'add-from-template'"
-                }
-            }
-        }]
-    },
-    "scripts": {
-        "vscode:prepublish": "webpack --mode production",
-        "webpack": "webpack --mode development",
-        "webpack-dev": "webpack --mode development --watch"
-    },
-    "dependencies": {
-        "node-plop": "^0.26.2",
-        "plop": "^2.7.4"
-    },
-    "devDependencies": {
-        "@types/node": "^12.12.0",
-        "ts-loader": "^7.0.5",
-        "typescript": "^3.9.4",
-        "@types/vscode": "^1.32.0",
-        "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.11"
-    }
+    "configuration": [
+      {
+        "title": "Plop Templates",
+        "required": [
+          "plopTemplates.configFileName",
+          "plopTemplates.terminalName",
+          "plopTemplates.destinationPath",
+          "plopTemplates.plopCommand"
+        ],
+        "properties": {
+          "plopTemplates.configFileName": {
+            "type": "string",
+            "default": "plopfile.js",
+            "description": "List of paths to plop file templates"
+          },
+          "plopTemplates.terminalName": {
+            "type": "string",
+            "default": "New File from Template",
+            "description": "Name of the Terminal window created for plop"
+          },
+          "plopTemplates.destinationPath": {
+            "type": "string",
+            "default": "destinationpath",
+            "description": "Name of the prompt the destination path will be passed in as"
+          },
+          "plopTemplates.plopCommand": {
+            "type": "string",
+            "default": "plop",
+            "description": "By default this extension assumes plop is installed globally (npm install -g plop). If this is not the case, add a 'scripts' record in your package.json file -- example: 'scripts': { 'add-from-template': 'plop' } -- next update this setting with your command case, in this example 'add-from-template'"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch",
+    "pack": "vsce package --no-dependencies",
+    "publish": "vsce publish --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.0",
+    "@types/vscode": "^1.64.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2"
+  }
 }

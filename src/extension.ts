@@ -1,9 +1,8 @@
 "use strict";
 
-import { workspace, window, commands, ExtensionContext, Terminal, Uri, QuickPickItem } from "vscode";
+import { workspace, window, commands, ExtensionContext, Terminal, Uri } from "vscode";
 import { dirname } from "path";
 import * as fs from "fs";
-import nodePlop, { NodePlopAPI } from "node-plop";
 
 function isWorkspaceOpen() {
     if ((workspace) && (workspace.workspaceFolders) && (workspace.workspaceFolders.length > 0)) {
@@ -11,45 +10,6 @@ function isWorkspaceOpen() {
     }
 
     return false;
-}
-
-type Generator = {
-    name: string;
-    description: string;
-};
-
-async function selectGenerator(plop: NodePlopAPI, plopFile: string): Promise<Generator | undefined> {
-    const generators = plop.getGeneratorList();
-
-    // no generators, output error
-    if (generators.length === 0) {
-        window.showErrorMessage(`No Plop.js generators found in the config file "${plopFile}". Add one using plop.setGenerator(...)`);
-        throw "No Plop.js generators found...";
-    }
-
-    // single generator, no need in prompting for selection
-    if (generators.length === 1) {
-        return generators[0];
-    }
-
-    // prompt user for which generator they want to use
-    if (generators.length > 1) {
-        const result = await window.showQuickPick<QuickPickItem>(
-            generators.map((generator: Generator) => ({ label: generator.name, description: generator.description })),
-            {
-                placeHolder: "Please choose a generator"
-            }
-        );
-
-        if (result === undefined) {
-            return undefined;
-        }
-
-        return {
-            name: result.label,
-            description: result.description!
-        };
-    }
 }
 
 async function runPlopInNewTerminal(dirUri: Uri) {
@@ -61,32 +21,13 @@ async function runPlopInNewTerminal(dirUri: Uri) {
 
     // user based settings
     const userSettings = workspace.getConfiguration();
-    const plopFileName: string = userSettings.get("plopTemplates.configFileName") || "plopfile.js";
     const plopTerminalName: string = userSettings.get("plopTemplates.terminalName") || "New File from Template";
     const destinationpathName: string = userSettings.get("plopTemplates.destinationPath") || "destinationpath";
     const plopCommand: string = (userSettings.get("plopTemplates.plopCommand") as string || "plop").trim();
     let plopCommandRelative: string = plopCommand;
 
-    const plopFile = workspace.rootPath + "/" + plopFileName;
-    let plop: NodePlopAPI;
-
-    try {
-        plop = nodePlop(plopFile);
-    }
-    catch (e) {
-        window.showErrorMessage(`Couldn't load plop config file at the path: "${plopFile}" - ${e}`);
-        return;
-    }
-
-
     let destPath: string = "";
     let plopTerminal: Terminal;
-    let selectedGenerator = await selectGenerator(plop, plopFile);
-
-    if (selectedGenerator === undefined) {
-        window.showInformationMessage("No Plop.js generator selected, cancelling...");
-        return;
-    }
 
     if (dirUri) {
         destPath = dirUri.fsPath;
@@ -121,11 +62,16 @@ async function runPlopInNewTerminal(dirUri: Uri) {
     }
 
     if (plopCommand !== "plop") {
-        plopCommandRelative = "npm run " + plopCommand;
+        plopCommandRelative = `npm run ${plopCommand} --`;
     }
 
     plopTerminal.show();
-    plopTerminal.sendText(`${plopCommandRelative} "${selectedGenerator.name}" -- --${destinationpathName} "${destPath}"`);
+    if (destPath.length > 0) {
+        plopTerminal.sendText(`${plopCommandRelative} -- --${destinationpathName} "${destPath}"`);
+    }
+    else {
+        plopTerminal.sendText(`${plopCommandRelative}`);
+    }
 }
 
 export function activate(context: ExtensionContext) {
@@ -133,7 +79,7 @@ export function activate(context: ExtensionContext) {
         try {
             runPlopInNewTerminal(dirUri);
         }
-        catch (e) {
+        catch (e: any) {
             window.showErrorMessage(e);
         }
     });

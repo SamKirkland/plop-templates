@@ -4,17 +4,17 @@ Install the extension on the [VSCode Marketplace](https://marketplace.visualstud
 
 ## Features
 This extension adds single and multi-file templates to Visual Studio Code.
-Add a template by right clicking the desired location and selecting `New File from Template`
+Add a template by right clicking the desired location and selecting `📄 New File from Template`
 
 
 ## Creating new project item from template 
-To invoke template selection, simply right click on a folder or file in vscode file explorer and click the `New File from Template` menu item.
+To invoke template selection, simply right click on a folder or file in vscode file explorer and click the `📄 New File from Template` menu item.
 
 <img src="https://raw.githubusercontent.com/samkirkland/plop-templates/master/resources/menu.png">
 
 ## Extension Setup
 1) Install the [VSCode extension](https://marketplace.visualstudio.com/items?itemName=SamKirkland.plop-templates)
-2) Install [plop.js](https://github.com/plopjs/plop) globally using `npm install plop -g` *(optionally you can install plop for [just your current project](#Using-a-local-version-of-plop))*
+2) Install [plop.js](https://github.com/plopjs/plop) globally using `npm install plop -g` *(optionally you can install plop for [just your current project](#Using-a-local-version-of-plop))*. Note: Plop 3.1.1 or higher required
 3) Now for the fun part! Create a new file called `plopfile.js` at the root of your project (same folder as `package.json`, the name/location is [configurable](#Settings)).
 ```js
 module.exports = function (plop) {
@@ -97,6 +97,13 @@ This extension expects plop.js to be install globally using `npm install plop -g
 
 
 ## Release Notes
+
+#### 1.2.0
+- Plop 3.1.1 or higher required
+- Removed shipped plop dependency
+- Removed shipped handlebars dependency
+- Reduced size from 7,200KB --> 54KB
+- Reduced load time
 
 #### 1.1.0
 - Fixing bug caused in 1.0.5 causing `MODULE_NOT_FOUND` error
